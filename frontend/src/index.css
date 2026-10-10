@@ -1,0 +1,332 @@
+/* ==========================================================================
+   Stratum Design System - Core Tokens & Utilities
+   A modern, dark/light engineered aesthetic for high-velocity teams.
+   ========================================================================== */
+
+:root {
+  /* Color Palette - Dark Mode Default */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Color Tokens - Modern Dark Matrix */
+  --bg-app: #0B0F17;
+  --bg-sidebar: #0F172A;
+  --bg-card: #141E33;
+  --bg-card-hover: #192642;
+  --bg-surface: #1E293B;
+  --bg-surface-elevated: #24344D;
+  --bg-glass: rgba(20, 30, 51, 0.75);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-accent: rgba(99, 102, 241, 0.4);
+
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-inverted: #0B0F17;
+
+  /* Primary Brand Accents */
+  --primary-50: #EEF2FF;
+  --primary-100: #E0E7FF;
+  --primary-400: #818CF8;
+  --primary-500: #6366F1;
+  --primary-600: #4F46E5;
+  --primary-glow: rgba(99, 102, 241, 0.25);
+
+  /* Status Colors */
+  --status-backlog: #64748B;
+  --status-todo: #0EA5E9;
+  --status-in-progress: #F59E0B;
+  --status-in-review: #A855F7;
+  --status-done: #10B981;
+
+  /* Priority Colors */
+  --priority-urgent: #EF4444;
+  --priority-urgent-bg: rgba(239, 68, 68, 0.15);
+  --priority-high: #F97316;
+  --priority-high-bg: rgba(249, 115, 22, 0.15);
+  --priority-medium: #3B82F6;
+  --priority-medium-bg: rgba(59, 130, 246, 0.15);
+  --priority-low: #64748B;
+  --priority-low-bg: rgba(100, 116, 139, 0.15);
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.35);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme Variables */
+[data-theme='light'] {
+  --bg-app: #F8FAFC;
+  --bg-sidebar: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F1F5F9;
+  --bg-surface: #F1F5F9;
+  --bg-surface-elevated: #E2E8F0;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-medium: rgba(0, 0, 0, 0.15);
+  --border-accent: rgba(99, 102, 241, 0.3);
+
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --text-inverted: #FFFFFF;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Base interactive elements */
+button, input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all var(--transition-fast);
+}
+
+input, select, textarea {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+/* Reusable Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.93;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-medium);
+}
+
+.btn-ghost {
+  color: var(--text-secondary);
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--border-subtle);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.btn-danger:hover:not(:disabled) {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Badge & Tag System */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-urgent {
+  background: var(--priority-urgent-bg);
+  color: var(--priority-urgent);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge-high {
+  background: var(--priority-high-bg);
+  color: var(--priority-high);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+.badge-medium {
+  background: var(--priority-medium-bg);
+  color: var(--priority-medium);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.badge-low {
+  background: var(--priority-low-bg);
+  color: var(--priority-low);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+/* Status Pill */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* Overdue Warning Badge */
+.badge-overdue {
+  background: rgba(239, 68, 68, 0.2);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  animation: pulse-border 2s infinite ease-in-out;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.4); }
+  50% { border-color: rgba(239, 68, 68, 0.8); }
+}
+
+/* Modal and Backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 14, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn var(--transition-normal);
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleUp var(--transition-normal);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Key code tags */
+.key-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-400);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
