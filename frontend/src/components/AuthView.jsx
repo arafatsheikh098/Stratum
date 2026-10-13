@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, ShieldCheck, Briefcase, Code, Eye, ArrowRight, Lock, Mail, UserPlus, LogIn } from 'lucide-react';
+import { Layers, ShieldCheck, Briefcase, Code, Eye, ArrowRight, UserPlus, LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function AuthView() {

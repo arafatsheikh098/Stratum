@@ -5,7 +5,6 @@ import {
   Clock,
   MessageSquare,
   UserCheck,
-  CheckCircle2,
   Filter
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -14,10 +13,6 @@ export default function ActivityView({ currentProject }) {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterAction, setFilterAction] = useState('');
-
-  useEffect(() => {
-    fetchActivities();
-  }, [currentProject, filterAction]);
 
   const fetchActivities = async () => {
     try {
@@ -33,6 +28,10 @@ export default function ActivityView({ currentProject }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchActivities();
+  }, [currentProject?.id, filterAction]);
 
   const getActionIcon = (actionType) => {
     switch (actionType) {

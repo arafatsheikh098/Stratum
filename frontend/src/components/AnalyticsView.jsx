@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BarChart2,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
   Users,
   TrendingUp
 } from 'lucide-react';
@@ -11,25 +7,22 @@ import { api } from '../services/api';
 
 export default function AnalyticsView({ currentProject, tasks = [] }) {
   const [analytics, setAnalytics] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  const fetchAnalytics = async () => {
+    if (!currentProject?.id) return;
+    try {
+      const data = await api.getProjectAnalytics(currentProject.id);
+      setAnalytics(data);
+    } catch (err) {
+      console.error('Failed to fetch analytics:', err);
+    }
+  };
 
   useEffect(() => {
     if (currentProject) {
       fetchAnalytics();
     }
-  }, [currentProject]);
-
-  const fetchAnalytics = async () => {
-    try {
-      setLoading(true);
-      const data = await api.getProjectAnalytics(currentProject.id);
-      setAnalytics(data);
-    } catch (err) {
-      console.error('Failed to fetch analytics:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [currentProject?.id]);
 
   const total = tasks.length;
   const completed = tasks.filter(t => t.status === 'DONE').length;

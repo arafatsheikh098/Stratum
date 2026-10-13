@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   X,
   Trash2,
-  Calendar,
-  User,
-  Clock,
   CheckSquare,
   MessageSquare,
   AlertTriangle,
@@ -23,7 +20,7 @@ export default function TaskDetailModal({
   onTaskDeleted,
   users = []
 }) {
-  const { user: currentUser, canEdit } = useAuth();
+  const { canEdit } = useAuth();
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -43,10 +40,6 @@ export default function TaskDetailModal({
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
   const [comments, setComments] = useState([]);
   const [newCommentContent, setNewCommentContent] = useState('');
-
-  useEffect(() => {
-    fetchTaskDetails();
-  }, [taskId]);
 
   const fetchTaskDetails = async () => {
     try {
@@ -69,6 +62,10 @@ export default function TaskDetailModal({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchTaskDetails();
+  }, [taskId]);
 
   const handleSave = async () => {
     if (!canEdit) return;

@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions
+from django.db.models import Q
 from .models import ActivityLog
 from .serializers import ActivityLogSerializer
 from apps.common.pagination import StandardResultsSetPagination
@@ -9,7 +10,16 @@ class ActivityLogListView(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        queryset = ActivityLog.objects.select_related('actor', 'project', 'task').all()
+        user = self.request.user
+        queryset = ActivityLog.objects.select_related('actor', 'project', 'task')
+
+        if not (user.role == 'ADMIN' or user.is_staff):
+            queryset = queryset.filter(
+                Q(project__memberships__user=user) |
+                Q(project__workspace__memberships__user=user) |
+                Q(workspace__memberships__user=user)
+            ).distinct()
+
         project_id = self.request.query_params.get('project')
         task_id = self.request.query_params.get('task')
         action_type = self.request.query_params.get('action_type')

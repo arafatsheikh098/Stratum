@@ -56,25 +56,6 @@ function MainApp() {
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
 
-  // Sync theme attribute on document root
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // Load initial workspace, projects, users
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadInitialData();
-    }
-  }, [isAuthenticated]);
-
-  // Load tasks whenever project, search, or filters change
-  useEffect(() => {
-    if (currentProject) {
-      loadTasks();
-    }
-  }, [currentProject, searchTerm, priorityFilter, assigneeFilter, onlyOverdueFilter]);
-
   const loadInitialData = async () => {
     try {
       const [wsData, usersData] = await Promise.all([
@@ -87,14 +68,28 @@ function MainApp() {
       if (wsData.length > 0) {
         const firstWs = wsData[0];
         setCurrentWorkspace(firstWs);
-        const projs = await api.getProjects(firstWs.id);
-        setProjects(projs);
-        if (projs.length > 0) {
-          setCurrentProject(projs[0]);
-        }
       }
     } catch (err) {
       console.error('Failed to load initial data:', err);
+    }
+  };
+
+  const loadProjectsForWorkspace = async (workspaceId) => {
+    try {
+      const projs = await api.getProjects(workspaceId);
+      setProjects(projs);
+      if (projs.length > 0) {
+        // Keep currentProject if it belongs to this workspace, otherwise select first
+        setCurrentProject(prev => {
+          const match = projs.find(p => p.id === prev?.id);
+          return match || projs[0];
+        });
+      } else {
+        setCurrentProject(null);
+        setTasks([]);
+      }
+    } catch (err) {
+      console.error('Failed to load projects for workspace:', err);
     }
   };
 
@@ -118,6 +113,32 @@ function MainApp() {
       setLoadingTasks(false);
     }
   };
+
+  // Sync theme attribute on document root
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  // Load initial workspace and users
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadInitialData();
+    }
+  }, [isAuthenticated]);
+
+  // Load projects whenever active workspace changes
+  useEffect(() => {
+    if (currentWorkspace?.id && isAuthenticated) {
+      loadProjectsForWorkspace(currentWorkspace.id);
+    }
+  }, [currentWorkspace?.id, isAuthenticated]);
+
+  // Load tasks whenever project, search, or filters change
+  useEffect(() => {
+    if (currentProject) {
+      loadTasks();
+    }
+  }, [currentProject?.id, searchTerm, priorityFilter, assigneeFilter, onlyOverdueFilter]);
 
   // Reorder Handler (Drag and drop or inline change)
   const handleReorderTask = async (taskId, newStatus, newOrder) => {
@@ -361,6 +382,9 @@ function MainApp() {
                   </button>
                 )}
               </div>
+            )}
+            {loadingTasks && (
+              <div style={{ height: '2px', width: '100%', background: 'linear-gradient(90deg, #6366F1, #EC4899)', opacity: 0.8 }} />
             )}
           </div>
 

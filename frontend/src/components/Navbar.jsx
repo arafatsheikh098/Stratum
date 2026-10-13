@@ -27,13 +27,6 @@ export default function Navbar({
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [loadingNotes, setLoadingNotes] = useState(false);
-
-  useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   const fetchNotifications = async () => {
     try {
@@ -44,6 +37,12 @@ export default function Navbar({
       console.warn('Failed to fetch notifications:', err);
     }
   };
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMarkRead = async (id, e) => {
     e.stopPropagation();

@@ -26,9 +26,19 @@ class TaskViewSet(viewsets.ModelViewSet):
         return TaskSerializer
 
     def get_queryset(self):
+        user = self.request.user
         queryset = Task.objects.select_related(
             'project', 'project__workspace', 'assignee', 'reporter'
-        ).prefetch_related('subtasks', 'comments').all()
+        ).prefetch_related('subtasks', 'comments')
+
+        if not (user.role == 'ADMIN' or user.is_staff):
+            queryset = queryset.filter(
+                Q(project__memberships__user=user) |
+                Q(project__workspace__memberships__user=user) |
+                Q(project__owner=user) |
+                Q(assignee=user) |
+                Q(reporter=user)
+            ).distinct()
 
         project_id = self.request.query_params.get('project')
         if project_id:
@@ -119,18 +129,26 @@ class TaskViewSet(viewsets.ModelViewSet):
                     related_project=task.project
                 )
 
-        if old_assignee != task.assignee and task.assignee:
-            changes['assignee'] = {'old': old_assignee.email if old_assignee else None, 'new': task.assignee.email}
+        if old_assignee != task.assignee:
+            new_assignee_email = task.assignee.email if task.assignee else None
+            old_assignee_email = old_assignee.email if old_assignee else None
+            changes['assignee'] = {'old': old_assignee_email, 'new': new_assignee_email}
+
+            if task.assignee:
+                msg = f"{user.full_name} assigned {task.task_key} to {task.assignee.full_name}"
+            else:
+                msg = f"{user.full_name} unassigned {task.task_key}"
+
             ActivityLog.objects.create(
                 workspace=task.project.workspace,
                 project=task.project,
                 task=task,
                 actor=user,
                 action_type=ActivityLog.ActionType.TASK_ASSIGNED,
-                message=f"{user.full_name} assigned {task.task_key} to {task.assignee.full_name}",
+                message=msg,
                 changes=changes
             )
-            if task.assignee != user:
+            if task.assignee and task.assignee != user:
                 Notification.objects.create(
                     recipient=task.assignee,
                     actor=user,

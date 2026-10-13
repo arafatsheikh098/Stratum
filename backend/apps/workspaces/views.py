@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from .models import Workspace, WorkspaceMember
 from .serializers import WorkspaceSerializer, WorkspaceMemberSerializer
 from apps.common.permissions import IsAdminUserOrReadOnly
@@ -17,7 +18,7 @@ class WorkspaceViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.role == 'ADMIN' or user.is_staff:
             return Workspace.objects.all()
-        return (Workspace.objects.filter(memberships__user=user) | Workspace.objects.filter(owner=user)).distinct()
+        return Workspace.objects.filter(Q(memberships__user=user) | Q(owner=user)).distinct()
 
     def perform_create(self, serializer):
         workspace = serializer.save(owner=self.request.user)

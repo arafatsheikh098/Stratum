@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Users, UserPlus, Shield, ShieldCheck, Eye, Code, Briefcase } from 'lucide-react';
+import { UserPlus, ShieldCheck, Eye, Code, Briefcase } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
 export default function TeamView({ currentWorkspace, users = [] }) {
-  const { user: currentUser, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const [selectedUserId, setSelectedUserId] = useState('');
   const [selectedRole, setSelectedRole] = useState('MEMBER');
   const [inviting, setInviting] = useState(false);

@@ -26,7 +26,8 @@ class IsTaskEditorOrReadOnly(permissions.BasePermission):
     """
     Allows viewing for any authenticated member.
     Allows editing if user is Admin, PM, the task assignee, or the reporter.
-    Viewers cannot edit or delete.
+    Allows non-viewer members to add comments, manage subtasks, and reorder tasks.
+    Viewers cannot edit, delete, or comment.
     """
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated)
@@ -43,5 +44,10 @@ class IsTaskEditorOrReadOnly(permissions.BasePermission):
         if request.user.role in ['ADMIN', 'PROJECT_MANAGER'] or request.user.is_staff:
             return True
 
-        # Assignee or reporter can edit
+        # Non-viewer team members can add comments, manage subtasks, or reorder
+        action = getattr(view, 'action', None)
+        if action in ['comments', 'subtasks', 'manage_subtask', 'reorder']:
+            return True
+
+        # Assignee or reporter can edit/delete
         return obj.assignee_id == request.user.id or obj.reporter_id == request.user.id

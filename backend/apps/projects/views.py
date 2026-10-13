@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from .models import Project, ProjectMember
 from .serializers import ProjectSerializer, ProjectMemberSerializer
 from apps.workspaces.models import Workspace
@@ -25,11 +26,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         if user.role == 'ADMIN' or user.is_staff:
             return queryset
-        # Filter to projects where user is project member or workspace member
+        # Filter to projects where user is project member, workspace member, or owner
         return queryset.filter(
-            memberships__user=user
-        ).distinct() | queryset.filter(
-            workspace__memberships__user=user
+            Q(memberships__user=user) |
+            Q(workspace__memberships__user=user) |
+            Q(owner=user) |
+            Q(workspace__owner=user)
         ).distinct()
 
     def perform_create(self, serializer):

@@ -129,3 +129,24 @@ class TasksAndProjectsAPITests(APITestCase):
         empty_response = self.client.get('/api/tasks/?status=DONE')
         self.assertEqual(empty_response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(empty_response.data['results']), 0)
+
+    def test_contributor_can_comment_on_task(self):
+        # Dev user comments on a task where reporter is admin
+        self.client.force_authenticate(user=self.dev_user)
+        url = f'/api/tasks/{self.task.id}/comments/'
+        response = self.client.post(url, {'content': 'Working on this endpoint right now.'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['content'], 'Working on this endpoint right now.')
+        self.assertEqual(response.data['author']['email'], self.dev_user.email)
+
+    def test_unassign_task_logs_activity(self):
+        from apps.activity.models import ActivityLog
+        self.client.force_authenticate(user=self.admin_user)
+        url = f'/api/tasks/{self.task.id}/'
+        response = self.client.patch(url, {'assignee_id': None}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNone(response.data['assignee'])
+
+        log = ActivityLog.objects.filter(task=self.task, action_type=ActivityLog.ActionType.TASK_ASSIGNED).last()
+        self.assertIsNotNone(log)
+        self.assertIn('unassigned', log.message)

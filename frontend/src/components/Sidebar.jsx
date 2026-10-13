@@ -6,7 +6,6 @@ import {
   Activity,
   Users,
   Plus,
-  FolderGit2,
   ShieldCheck,
   ShieldAlert
 } from 'lucide-react';
