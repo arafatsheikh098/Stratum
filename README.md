@@ -11,6 +11,18 @@
 
 ---
 
+## 📸 Visual Tour & Screenshots
+
+| 1-Click Instant Persona Auth | Interactive Kanban Board |
+| :---: | :---: |
+| ![Auth Personas](docs/screenshots/01-auth-personas.png) | ![Kanban Board](docs/screenshots/02-kanban-board.png) |
+
+| Sprint Analytics & Velocity Metrics | Filterable Project Tasks List View |
+| :---: | :---: |
+| ![Analytics](docs/screenshots/03-analytics-dashboard.png) | ![List View](docs/screenshots/04-list-view.png) |
+
+---
+
 ## 📚 Table of Contents
 
 1. [Beginner Quickstart (Under 3 Minutes)](#-beginner-quickstart-under-3-minutes)
